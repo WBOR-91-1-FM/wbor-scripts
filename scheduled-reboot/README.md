@@ -15,7 +15,7 @@ Automatically reboots macOS every 48 hours at 4am, with [failsafe notification o
 - **Notification override**: Sends failsafe override before reboot (configurable)
 - **Comprehensive logging**: Logs all activities to `~/Library/Logs/scheduled-reboot.log`
 - **User notification**: Shows macOS notification 30 seconds before reboot
-- No admin privileges required
+- **Multiple reboot methods**: Tries AppleScript, shutdown, and reboot commands automatically
 
 ## Setup Instructions
 
@@ -148,9 +148,12 @@ rm ~/Library/LaunchAgents/com.wbor.scheduledreboot.plist
 
 ## Notes
 
-- Script runs as current user (no sudo required)
-- Credentials are stored in plain text - consider using environment variables or keychain
-- Reboot command uses standard system shutdown without admin privileges
+- **Reboot Methods**: Script tries multiple reboot methods automatically:
+  1. **AppleScript**: `tell app "System Events" to restart` (works on most managed machines)
+  2. **Shutdown command**: `/sbin/shutdown -r now` (requires admin privileges)
+  3. **Reboot command**: `/sbin/reboot` (fallback method)
+- **Permissions**: No admin privileges required if AppleScript method works
+- **Credentials**: Stored in plain text - consider using environment variables or keychain
 
 ## Customization
 

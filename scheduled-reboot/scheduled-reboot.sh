@@ -60,8 +60,24 @@ sleep 30
 
 log_message "System reboot initiated - scheduled maintenance"
 
-# Reboot the system (no sudo required for current user reboot on managed machines)
+# Reboot the system - try multiple methods for different permission setups
 log_message "Executing reboot command..."
-/sbin/shutdown -r now "Scheduled maintenance reboot"
+
+# Method 1: Try osascript (works on most managed machines)
+if /usr/bin/osascript -e 'tell app "System Events" to restart' 2>/dev/null; then
+    log_message "✓ Reboot initiated via AppleScript"
+# Method 2: Try shutdown command (may require admin)
+elif /sbin/shutdown -r now "Scheduled maintenance reboot" 2>/dev/null; then
+    log_message "✓ Reboot initiated via shutdown command"
+# Method 3: Try reboot command
+elif /sbin/reboot 2>/dev/null; then
+    log_message "✓ Reboot initiated via reboot command"
+else
+    log_message "✗ Failed to initiate reboot - insufficient permissions"
+    log_message "Manual intervention required: please reboot the system"
+    # Send notification about manual reboot needed
+    /usr/bin/osascript -e 'display notification "Scheduled reboot failed - manual restart required" with title "Reboot Error" sound name "Glass"' 2>/dev/null || true
+    exit 1
+fi
 
 log_message "=== Reboot command executed ==="

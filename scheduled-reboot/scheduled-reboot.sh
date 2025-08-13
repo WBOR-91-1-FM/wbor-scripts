@@ -55,6 +55,25 @@ fi
 log_message "Waiting 30 seconds for override to take effect..."
 sleep 30
 
+# Gracefully quit BUTT if it's running
+if pgrep -f "butt\|BUTT" >/dev/null 2>&1; then
+    
+    # Force quit if still running
+    if pgrep -f "butt"; then
+        log_message "Force quitting BUTT..."
+        pkill -f "butt" || true
+        sleep 2
+    fi
+    
+    if pgrep -f "butt"; then
+        log_message "⚠ BUTT still running after quit attempts"
+    else
+        log_message "✓ BUTT quit successfully"
+    fi
+else
+    log_message "BUTT is not running"
+fi
+
 # Display notification to any logged-in users
 /usr/bin/osascript -e 'display notification "System will reboot in 30 seconds for scheduled maintenance" with title "Scheduled Reboot" sound name "Glass"' 2>/dev/null || true
 

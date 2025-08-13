@@ -8,7 +8,7 @@
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/Users/USERNAME/Projects/radio/wbor-scripts/scheduled-reboot/scheduled-reboot.sh</string>
+        <string>/Users/USERNAME/PROJECT_DIR/scheduled-reboot.sh</string>
     </array>
     
     <key>StartCalendarInterval</key>

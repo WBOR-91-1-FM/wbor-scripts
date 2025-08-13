@@ -5,6 +5,8 @@
 
 echo "Testing scheduled reboot script setup..."
 
+echo "Note: Configure RabbitMQ credentials in scheduled-reboot.sh before use"
+
 # Test 1: Check if script exists and is executable
 SCRIPT_PATH="./scheduled-reboot.sh"
 if [[ -x "$SCRIPT_PATH" ]]; then
@@ -63,7 +65,6 @@ echo ""
 echo "4. To unload the job (if needed):"
 echo "   launchctl unload ~/Library/LaunchAgents/com.wbor.scheduledreboot.plist"
 echo ""
-echo "Note: Configure RabbitMQ credentials in scheduled-reboot.sh before use"
 
 # Clean up test script
 rm -f "$TEST_SCRIPT"

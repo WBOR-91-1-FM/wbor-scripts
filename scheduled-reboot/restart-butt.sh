@@ -43,12 +43,6 @@ is_butt_running() {
 # Function to kill BUTT process
 kill_butt() {
     pkill -f "butt"
-    sleep 2
-    # Force kill if still running
-    if is_butt_running; then
-        pkill -9 -f "butt"
-        sleep 1
-    fi
 }
 
 # Create log directory if it doesn't exist

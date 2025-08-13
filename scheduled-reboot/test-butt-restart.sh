@@ -34,9 +34,7 @@ fi
 # Test 4: Check for BUTT application
 BUTT_PATHS=(
     "/Applications/butt.app"
-    "/Applications/BUTT.app"
     "$HOME/Applications/butt.app"
-    "$HOME/Applications/BUTT.app"
 )
 
 BUTT_FOUND=false
@@ -53,11 +51,10 @@ if [[ "$BUTT_FOUND" == false ]]; then
     for path in "${BUTT_PATHS[@]}"; do
         echo "  - $path"
     done
-    echo "Note: Script will still work if BUTT is installed elsewhere"
 fi
 
 # Test 5: Check if BUTT is currently running
-if pgrep -f "butt\|BUTT" >/dev/null 2>&1; then
+if pgrep -f "butt"; then
     echo "✓ BUTT is currently running"
 else
     echo "ℹ BUTT is not currently running"
@@ -87,7 +84,7 @@ log_message "Waiting 5 seconds for override to take effect..."
 sleep 5
 
 # Check for BUTT without actually stopping it
-if pgrep -f "butt\|BUTT" >/dev/null 2>&1; then
+if pgrep -f "butt"; then
     log_message "✓ BUTT is currently running (would restart in real mode)"
 else
     log_message "BUTT is not currently running (would start in real mode)"

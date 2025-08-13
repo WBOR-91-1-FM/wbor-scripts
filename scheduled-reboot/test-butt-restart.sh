@@ -79,9 +79,6 @@ log_message() {
 mkdir -p "$(dirname "$LOG_FILE")"
 
 log_message "=== BUTT Restart Script Started (TEST MODE) ==="
-log_message "WARNING: RabbitMQ credentials not configured. Skipping notification override."
-log_message "Waiting 5 seconds for override to take effect..."
-sleep 5
 
 # Check for BUTT without actually stopping it
 if pgrep -f "butt"; then
@@ -102,8 +99,6 @@ bash "$TEST_SCRIPT"
 LOG_FILE="$HOME/Library/Logs/butt-restart.log"
 if [[ -f "$LOG_FILE" ]]; then
     echo "✓ Log file created successfully"
-    echo "Recent log entries:"
-    tail -5 "$LOG_FILE"
 else
     echo "✗ Log file was not created"
 fi

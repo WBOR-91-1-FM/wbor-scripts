@@ -103,13 +103,6 @@ if is_butt_running; then
     
     log_message "Stopping BUTT..."
     kill_butt
-    
-    if is_butt_running; then
-        log_message "✗ Failed to stop BUTT process"
-        exit 1
-    else
-        log_message "✓ BUTT stopped successfully"
-    fi
 else
     log_message "BUTT is not currently running"
 fi

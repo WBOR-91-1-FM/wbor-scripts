@@ -11,7 +11,7 @@ SERVICE_NAME="streamwbor"
 SCRIPT_PATH="${HOME}/.${SCRIPT_NAME}"
 PLIST_NAME="${LABEL}.plist"
 PLIST_PATH="${HOME}/Library/LaunchAgents/${PLIST_NAME}"
-LOG_DIR="${HOME}/Logs/${SERVICE_NAME}"
+LOG_DIR="${HOME}/Logs/wbor/automation-stream"
 STDOUT_LOG="${LOG_DIR}/launchd.out.log"
 STDERR_LOG="${LOG_DIR}/launchd.err.log"
 

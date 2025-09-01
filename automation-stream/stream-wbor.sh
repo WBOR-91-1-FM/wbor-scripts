@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 # Define log paths first
-LOGDIR="$HOME/Logs/streamwbor"
+LOGDIR="$HOME/Logs/wbor/automation-stream"
 LOGFILE="$LOGDIR/mpv.log"
 
 log() {

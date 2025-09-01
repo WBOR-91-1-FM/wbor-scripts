@@ -27,3 +27,23 @@ Not required but useless without:
 * `Release` (album)
 
 Download as `.csv` and save to the script's folder.
+
+## Log Rotation
+
+All scripts log to `~/Logs/wbor/`. To prevent logs from growing indefinitely:
+
+1. **Set up log rotation** (automatically rotates logs when they exceed 10MB, keeps 5 old versions):
+
+   ```bash
+   # Add to crontab
+   crontab -e
+   
+   # Add this line to rotate logs daily at 2 AM
+   0 2 * * * /Users/mdrxy/personal/wbor/wbor-scripts/lib/rotate-logs.sh >/dev/null 2>&1
+   ```
+
+2. **Manual rotation** (run as needed):
+
+   ```bash
+   ./lib/rotate-logs.sh
+   ```

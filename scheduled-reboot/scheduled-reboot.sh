@@ -8,7 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../lib/rabbitmq-config.sh"
 load_rabbitmq_config
 
-LOG_FILE="$HOME/Library/Logs/scheduled-reboot.log"
+LOG_FILE="$HOME/Logs/wbor/scheduled-reboot/scheduled-reboot.log"
 
 # Function to log messages
 log_message() {

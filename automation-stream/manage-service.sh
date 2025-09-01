@@ -73,7 +73,7 @@ case "${1:-}" in
         ;;
     
     logs)
-        LOG_DIR="${HOME}/Logs/streamwbor"
+        LOG_DIR="${HOME}/Logs/wbor/automation-stream"
         echo "Following logs (Ctrl+C to stop)..."
         echo "stdout: tail -f ${LOG_DIR}/launchd.out.log"
         echo "stderr: tail -f ${LOG_DIR}/launchd.err.log"

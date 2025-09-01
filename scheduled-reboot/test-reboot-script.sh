@@ -5,7 +5,13 @@
 
 echo "Testing scheduled reboot script setup..."
 
-echo "Note: Configure RabbitMQ credentials in scheduled-reboot.sh before use"
+echo "Note: Configure RabbitMQ credentials via config file before use:"
+echo "  Create ~/.config/wbor-rabbitmq-config with key=value pairs:"
+echo "  RABBITMQ_USER=myuser"
+echo "  RABBITMQ_PASS=mypass"
+echo "  RABBITMQ_HOST=localhost"
+echo "  RABBITMQ_PORT=15672"
+echo "  RABBITMQ_PROTOCOL=http"
 
 # Test 1: Check if script exists and is executable
 SCRIPT_PATH="./scheduled-reboot.sh"

@@ -1,14 +1,19 @@
 # wbor-spinitron-scripts
 
-## validate_new
+## `automation-stream`
 
-Checks a list of spins' release year against the year it was spun during, returning spin objects whose spin year doesn't match the song's release year.
+See folder `README`.
+
+## `spinitron/validate_new.py`
+
+Checks the release year for a list of Spinitron "spins" against the year it was played, returning spin objects whose spin year doesn't match the song's release year. In such case, the song may not be a "new release".
 
 Run with `python3 validate_new.py`. Expects `input.csv` in the same directory as the script.
 
 ### `input.csv`
 
-[Generate a report](https://spinitron.com/m/spin/chart) on Spinitron's site. For this script, I like to filter by "New Release: Yes" and then expand to the past few years. Choose "Export/email" and select the following fields:
+To use `validate_new.py`, you need a CSV export of your station's spins from Spinitron. You can
+[generate a report](https://spinitron.com/m/spin/chart) on Spinitron's site. For this script, I filter by `'New Release: Yes'` and then expand to the past few years. Choose `'Export/email'` and select the following fields:
 
 Required:
 

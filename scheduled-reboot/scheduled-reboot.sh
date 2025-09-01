@@ -3,15 +3,12 @@
 # Scheduled Reboot Script for macOS
 # Runs every 48 hours at 4am, sends notification override before rebooting
 
-# Configuration
-RABBITMQ_USER=""
-RABBITMQ_PASS=""
-RABBITMQ_HOST="" # Without protocol, e.g., "localhost" or "rabbitmq.example.com"
-RABBITMQ_PORT=""  # Usually 15672 for RabbitMQ management API
-RABBITMQ_PROTOCOL="http" # or "https" depending on the setup
+# Load RabbitMQ configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../lib/rabbitmq-config.sh"
+load_rabbitmq_config
 
 LOG_FILE="$HOME/Library/Logs/scheduled-reboot.log"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Function to log messages
 log_message() {
@@ -51,22 +48,33 @@ else
     fi
 fi
 
-# Wait 30 seconds for the override to take effect
-log_message "Waiting 30 seconds for override to take effect..."
-sleep 30
+log_message "Waiting 15 seconds for override to take effect..."
+sleep 15
 
-# Gracefully quit BUTT if it's running
-if pgrep -f "butt\|BUTT" >/dev/null 2>&1; then
-    
-    # Force quit if still running
-    if pgrep -f "butt"; then
-        log_message "Force quitting BUTT..."
-        pkill -f "butt" || true
-        sleep 2
+# Force quit all applications before reboot
+log_message "Force quitting all applications..."
+
+# Get all running GUI applications and quit them
+osascript -e 'tell application "System Events" to set appList to name of every process whose background only is false' 2>/dev/null | tr ',' '\n' | while IFS= read -r app; do
+    app=$(echo "$app" | xargs)  # trim whitespace
+    if [[ "$app" != "Finder" && "$app" != "System Events" && "$app" != "loginwindow" ]]; then
+        log_message "Quitting application: $app"
+        osascript -e "tell application \"$app\" to quit" 2>/dev/null || true
     fi
+done
+
+sleep 3
+
+# Force quit BUTT specifically (may resist normal quit attempts during broadcast)
+if pgrep -xf ".*[Bb][Uu][Tt][Tt].*" >/dev/null 2>&1; then
+    log_message "Force quitting BUTT..."
+    pkill -xf ".*[Bb][Uu][Tt][Tt].*" || true
+    sleep 2
     
-    if pgrep -f "butt"; then
-        log_message "⚠ BUTT still running after quit attempts"
+    if pgrep -xf ".*[Bb][Uu][Tt][Tt].*" >/dev/null 2>&1; then
+        log_message "⚠ BUTT still running after force quit attempts"
+        killall -9 "BUTT" 2>/dev/null || true
+        killall -9 "butt" 2>/dev/null || true
     else
         log_message "✓ BUTT quit successfully"
     fi
@@ -74,28 +82,23 @@ else
     log_message "BUTT is not running"
 fi
 
-# Display notification to any logged-in users
-/usr/bin/osascript -e 'display notification "System will reboot in 30 seconds for scheduled maintenance" with title "Scheduled Reboot" sound name "Glass"' 2>/dev/null || true
-
 log_message "System reboot initiated - scheduled maintenance"
 
-# Reboot the system - try multiple methods for different permission setups
-log_message "Executing reboot command..."
+# Reboot the system with force flag - try multiple methods for different permission setups
+log_message "Executing forced reboot command..."
 
-# Method 1: Try osascript (works on most managed machines)
-if /usr/bin/osascript -e 'tell app "System Events" to restart' 2>/dev/null; then
+# Method 1: Try shutdown with force flag (most reliable for forced reboot)
+if /sbin/shutdown -r -f now "Scheduled maintenance reboot" 2>/dev/null; then
+    log_message "✓ Forced reboot initiated via shutdown command"
+# Method 2: Try osascript with immediate restart
+elif /usr/bin/osascript -e 'tell app "System Events" to restart' 2>/dev/null; then
     log_message "✓ Reboot initiated via AppleScript"
-# Method 2: Try shutdown command (may require admin)
-elif /sbin/shutdown -r now "Scheduled maintenance reboot" 2>/dev/null; then
-    log_message "✓ Reboot initiated via shutdown command"
 # Method 3: Try reboot command
-elif /sbin/reboot 2>/dev/null; then
-    log_message "✓ Reboot initiated via reboot command"
+elif /sbin/reboot -f 2>/dev/null; then
+    log_message "✓ Forced reboot initiated via reboot command"
 else
     log_message "✗ Failed to initiate reboot - insufficient permissions"
     log_message "Manual intervention required: please reboot the system"
-    # Send notification about manual reboot needed
-    /usr/bin/osascript -e 'display notification "Scheduled reboot failed - manual restart required" with title "Reboot Error" sound name "Glass"' 2>/dev/null || true
     exit 1
 fi
 

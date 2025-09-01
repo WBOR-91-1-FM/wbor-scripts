@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+
+  <key>Label</key>
+  <string>com.wbor.streamwbor</string>
+
+  <!-- Only run after log into the GUI -->
+  <key>LimitLoadToSessionType</key>
+  <string>Aqua</string>
+
+  <!-- Launch script -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/$USERNAME/.stream-wbor.sh</string>
+  </array>
+
+  <!-- Ensure Homebrew's mpv is found and set stream URL -->
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    <key>AUTOMATION_STREAM_URL</key>
+    <string>$STREAM_URL</string>
+  </dict>
+
+  <!-- Start at login and restart on crash -->
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+
+</dict>
+</plist>
